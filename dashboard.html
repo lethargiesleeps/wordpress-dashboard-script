@@ -1,0 +1,720 @@
+<!-- Property of CapCityHipHop 2024 -->
+<!-- Written by Michael Landry -->
+<!-- Please do not modify this page and/or text -->
+<div style="padding: 4rem 1rem; display: flex; justify-content: center; align-items: center; width: 100%;" id="container">
+    <style type="text/css" scoped>
+        .fake-btn {
+                background-color: red;
+                color: white;
+                padding: 1rem;
+                border-radius: 4px;
+                transition: background-color 0.3s ease-in, color 0.3s ease-in;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .fake-btn:hover {
+                color: white;
+                background-color: black;
+                transition: background-color 0.3s ease-in, color 0.3s ease-in;
+                cursor: pointer;
+            }
+
+            h1:hover {
+                color: red;
+                transition: color 0.3s ease-in;
+                cursor: pointer;
+            }
+
+            h1 {
+                color: black;
+                transition: color 0.3s ease-in;
+                border-bottom: solid black 3px;
+            }
+
+            .input-container {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                margin-bottom: 1rem;
+            }
+
+            .input-container label {
+                font-size: 24px;
+            }
+
+            .cb {
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+            }
+
+            .cb input {
+                margin-right: 1rem;
+            }
+
+            #checkBoxes {
+                display: flex;
+                flex-direction: column;
+            }
+
+            #title, #tEdit {
+                width: 740px;
+            }
+    </style>
+    <!-- #region InitialView -->
+    <div id="initLinks">
+        <h1 id="newPostLink">New Post</h1><br>
+        <h1 id="editPostLink">Edit Post</h1><br>
+        <h1 id="deletePostLink">Delete Post</h1><br>
+        <h1 id="addMedia">Add Media</h1>
+    </div>
+
+    
+    <!-- #endregion -->
+
+    <!-- #region CreatePostForm -->
+    <div id="newPostForm" style="display: none;">
+        <div class="formContainer">
+            <h1 id="newPostBack">< Back</h1>
+            <div class="input-container" style="border-bottom: 2px solid gray; margin-bottom: 1em; padding-bottom:1em;">
+                <style scoped>
+                    input {
+                        margin-bottom: 1em;
+                    }
+                </style>
+                <label for="featuredImage">Set Featured Image <i>(JPEG, JPG, or PNG only)</i>:</label>
+                <input type="file" name="featured-image" id="featuredImage" accept="image/png, image/jpeg, image/jpg">
+
+                <label for="featuredImageTitle">Image Title:</label>
+                <input type="text" name="featured-image-title" id="featuredImageTitle">
+
+                <label for="featuredImageCaption">Image Caption:</label>
+                <input type="text" name="featured-image-caption" id="featuredImageCaption">
+
+                <label for="featuredImageAlt">Alt Text (Image Description):</label>
+                <input type="text" name="featured-image-alt" id="featuredImageAlt">
+            </div>
+
+            <div class="input-container">
+                <label for="title">Post Title:</label>
+                <input type="text" name="post-title" id="title">
+            </div>
+
+            <div class="input-container">
+                <label for="contentTa">Content:</label>
+                <textarea rows="20" cols="100" id="contentTa"></textarea>
+            </div>
+
+            <div class="input-container">
+
+                <h2>Categories:</h2>
+
+                <div id="checkBoxes">
+                    <div class="cb">  
+                        <input type="checkbox" name="news" id="newsCb">
+                        <label for="newsCb">News</label>
+                    </div>
+
+                    <div class="cb">  
+                        <input type="checkbox" name="music" id="musicCb">
+                        <label for="musicCb">Music</label>
+                    </div>
+
+                    <div class="cb">  
+                        <input type="checkbox" name="events" id="eventsCb">
+                        <label for="eventsCb">Events</label>
+                    </div>
+
+                    <div class="cb">  
+                        <input type="checkbox" name="videos" id="videoCb">
+                        <label for="videoCb">Videos</label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="input-container">
+                <label for="tagsTa">Tags <i>(Seperate with commas. Avoid using a space after a comma):</i></label>
+                <textarea name="tags" id="tagsTa" cols="50" rows="10" placeholder="ex: music,hip-hop,dax"></textarea>
+            </div>
+
+            <div class="input-container">
+                <label for="mvTb">YouTube Link</label>
+                <input type="text" name="music-video" id="mvTb" placeholder="Leave blank for no video...">
+                <label for="mvPositionSelect">Video Position</label>
+                <select name="mvPosition" id="mvPositionSelect">
+                    <option value="top">Top</option>
+                    <option value="bottom">Bottom</option>
+                </select>
+            </div>
+            
+            <div class="input-container">
+                <label for="authorSelect">Author:</label>
+                <select name="" id="authorSelect"></select>
+            </div>
+
+
+            <p class="fake-btn" id="createPostBtn">Create Post</p>
+        </div>
+    </div>
+    <!-- #endregion -->
+
+    <!-- #region EditPostForm -->
+    <div id="editPostView" style="display: none; justify-content: center; flex-direction: column;">
+        <h1 id="editPostBack">< Back</h1>
+        <table id="editPostTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>NAME</th>
+                    <th>AUTHOR</th>
+                    <th>CATEGORY</th>
+                    <th>PUBLISH DATE</th>
+                    <th>EDIT</th>
+                </tr>
+            </thead>
+            <tbody id="editPostBody"></tbody>
+        </table>
+
+    </div>
+
+    <div class="formContainer" id="editPostForm" style="display: none; justify-content: center; flex-direction: column;">
+        <div class="input-container">
+            <label for="fiEdit">Set Featured Image <i>(JPEG, JPG, or PNG only)</i>:</label>
+            <input type="file" name="featured-image-edit" id="fiEdit" accept="image/png, image/jpeg, image/jpg">
+        </div>
+
+        <div class="input-container">
+            <label for="tEdit">Post Title:</label>
+            <input type="text" name="post-title-edit" id="tEdit">
+        </div>
+
+        <div class="input-container">
+            <label for="contentTaEdit">Content:</label>
+            <textarea rows="20" cols="100" id="contentTaEdit"></textarea>
+        </div>
+
+        <div class="input-container">
+
+            <h2>Categories:</h2>
+
+            <div id="checkBoxes">
+                <div class="cb">  
+                    <input type="checkbox" name="news" id="newsCbEdit">
+                    <label for="newsCbEdit">News</label>
+                </div>
+
+                <div class="cb">  
+                    <input type="checkbox" name="music" id="musicCbEdit">
+                    <label for="musicCbEdit">Music</label>
+                </div>
+
+                <div class="cb">  
+                    <input type="checkbox" name="events" id="eventsCbEdit">
+                    <label for="eventsCbEdit">Events</label>
+                </div>
+
+                <div class="cb">  
+                    <input type="checkbox" name="videos" id="videoCbEdit">
+                    <label for="videoCbEdit">Videos</label>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="input-container">
+            <label for="tagsTaEdit">Tags <i>(Seperate with commas. Avoid using a space after a comma):</i></label>
+            <textarea name="tags" id="tagsTaEdit" cols="50" rows="10" placeholder="ex: music,hip-hop,dax"></textarea>
+        </div>
+
+        <div class="input-container">
+            <label for="mvTbEdit">YouTube Link</label>
+            <input type="text" name="music-video" id="mvTbEdit" placeholder="Leave blank for no video...">
+            <label for="mvPositionSelect">Video Position</label>
+            <select name="mvPosition" id="mvPositionSelectEdit">
+                <option value="top">Top</option>
+                <option value="bottom">Bottom</option>
+            </select>
+        </div>
+        
+
+
+        <p class="fake-btn" id="apiButton">Create Post</p>
+    </div>
+    <!-- #endregion -->
+
+    <div id="deletePostView" style="display: none; justify-content: center; flex-direction: column;">
+        <h1 id="deletePostBack">< Back</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>NAME</th>
+                    <th>AUTHOR</th>
+                    <th>CATEGORY</th>
+                    <th>PUBLISH DATE</th>
+                    <th>DELETE</th>
+                </tr>
+            </thead>
+            <tbody id="deletePostBody"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+
+    const globalElements = {
+        'init-links': document.getElementById('initLinks'),
+        'new-post': document.getElementById('newPostLink'),
+        'edit-post': document.getElementById('editPostLink'),
+        'delete-post': document.getElementById('deletePostLink'),
+        'new-post-form': document.getElementById('newPostForm'),
+        'edit-post-form': document.getElementById('editPostForm'),
+        'edit-post-view': document.getElementById('editPostView'),
+        'delete-post-view': document.getElementById('deletePostView')
+    }
+
+    init(); //Initial call
+
+    //All initial functions go here
+    function init() {
+        initLinkEvents();
+        contentPlaceholderGenerate();
+        setBackButtons();
+        createNewPost();
+    }
+    
+    function createNewPost() {
+        const notSelected = 'not-selected';
+        const noVideo = 'no-video'
+        document.getElementById('createPostBtn').addEventListener('click', async() => {
+            const postData = {
+                'featured-image': document.getElementById('featuredImage').files[0],
+                'featured-image-title': document.getElementById('featuredImageTitle').value,
+                'featured-image-caption': document.getElementById('featuredImageCaption').value,
+                'featured-image-alt': document.getElementById('featuredImageAlt').value,
+                'title': document.getElementById('title').value,
+                'content': document.getElementById('contentTa').value,
+                'is-event': (document.getElementById('eventsCb').checked) ? await getPostCategoryKey('Events') : notSelected,
+                'is-video': (document.getElementById('videoCb').checked) ? await getPostCategoryKey('Videos') : notSelected,
+                'is-music': (document.getElementById('musicCb').checked) ? await getPostCategoryKey('Music') : notSelected,
+                'is-news': (document.getElementById('newsCb').checked) ? await getPostCategoryKey('News') : notSelected,
+                'tags': document.getElementById('tagsTa').value.split(','),
+                'youtube-video': (document.getElementById('mvTb').value !== '') ? extractYoutubeLink(document.getElementById('mvTb').value) : noVideo,
+                'youtube-video-position': document.getElementById('mvPositionSelect').value,
+                'author': document.getElementById('authorSelect').value
+            };
+
+            const formData = new FormData();
+
+            if(postData['content'] === '') {
+                alert('Please include content...');
+                return;
+            }
+
+            if(postData['title'] === '') {
+                alert('please include a title...');
+                return;
+            }
+
+            document.getElementById('createPostBtn').style.display ='none';
+            let featuredImage = null;
+            let tags = null;
+        
+            if(postData['featured-image'] !== undefined) {
+                featuredImage = await uploadImage(
+                postData['featured-image'],
+                postData['featured-image-title'],
+                postData['featured-image-caption'],
+                postData['featured-image-alt']);
+                formData.append('featured_media', featuredImage['id']);
+                console.log(`Featured image succesful with ID: ${featuredImage['id']}`)
+
+                
+            }
+
+            if(document.getElementById('tagsTa').value !== '') {
+                tags = await getTagIds(postData['tags']);
+                formData.append('tags', tags);
+                console.log(`Tags succesful with Tag IDs: \n${tags}`);
+            }
+            
+            let content = await parseAndRenderContent(postData['content']);
+            let renderedContent = '';
+            if(postData['youtube-video'] !== noVideo) {
+                renderedContent = (postData['youtube-video-position'] === 'top')
+                    ? postData['youtube-video'] + content
+                    : renderedContent = content + postData['youtube-video'];
+                
+                console.log(`YouTube video included at position ${postData['youtube-video-position']} with contents: ${postData['youtube-video']}`);
+            }
+            else {
+                console.log('YouTube video not included.');
+                renderedContent = content;
+            }
+            
+            formData.append('content', renderedContent);
+            console.log(`Content succesful with rendered content: \n ${renderedContent}`);
+
+            let categories = [];
+            if(postData['is-event'] !== notSelected) categories.push(postData['is-event']);
+            if(postData['is-music'] !== notSelected) categories.push(postData['is-music']);
+            if(postData['is-video'] !== notSelected) categories.push(postData['is-video']);
+            if(postData['is-news'] !== notSelected) categories.push(postData['is-news']);
+            formData.append('categories', categories);
+            console.log('Categories succesful with IDs: ' + categories);
+
+            formData.append('author', postData['author']);
+            console.log('Author succesful with ID: ' + postData['author']);
+
+            formData.append('title', postData['title']);
+            console.log('Title successful with value: ' + postData['title']);
+
+            formData.append('status', 'publish');
+            console.log('Attempting to publish post...');
+
+            const apiUrl = 'https://capcityhiphop.com/wp-json/wp/v2/posts/'
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Basic ${getCredentials()}`
+                    },
+                    body: formData
+                });
+
+                if(response.ok) {
+                    const jsonResponse = await response.json();
+                    console.log(jsonResponse);
+                }
+                else {
+                    console.log(`Error Status: ${response.status}`);
+                    console.log(`Error Status Text: ${response.statusText}`);
+                    console.log('Thrown from response...');
+                }
+            }
+            catch (error) {
+                console.error(`Error: ${error}`);
+                console.log('Thrown from request...');
+            }
+
+            
+        
+        });
+    }
+
+    function setBackButtons() {
+        document.getElementById('newPostBack').addEventListener('click', () => {
+            globalElements['new-post-form'].style.display = 'none';
+            globalElements['init-links'].style.display = 'block';
+        });
+
+        document.getElementById('deletePostBack').addEventListener('click', () => {
+            globalElements['delete-post-view'].style.display = 'none';
+            globalElements['init-links'].style.display = 'block';
+        });
+
+        document.getElementById('editPostBack').addEventListener('click', () => {
+            globalElements['edit-post-view'].style.display = 'none';
+            globalElements['init-links'].style.display = 'block';
+        });
+        
+    }
+    //Adds on click listeners to initial links
+    async function initLinkEvents() {
+        const authors = await getAuthors();
+        if(authors) {
+            authors.forEach(a => {
+                const opt = document.createElement('option');
+                opt.value = a['id'];
+                opt.innerText = a['name'];
+                document.getElementById('authorSelect').appendChild(opt);
+            });
+        }
+        globalElements['new-post'].addEventListener('click', async() => {
+            hideInitLinks();
+            globalElements['new-post-form'].style.display = 'flex';
+            
+        });
+
+        globalElements['edit-post'].addEventListener('click', async() => {
+            hideInitLinks();
+            globalElements['edit-post-view'].style.display = 'flex';
+
+            const tableBody = document.getElementById('editPostBody');
+            tableBody.innerHTML = '';
+
+            const posts = await getFromApi('posts');
+            posts.forEach(async(p) => await drawTable(p, tableBody, 'Edit Post', function() {
+                globalElements['edit-post-view'].style.display = 'none';
+                globalElements['edit-post-form'].style.display = 'flex';
+
+                const formElements = {
+                    'post-title' : document.getElementById('tEdit'),
+                    'post-content': document.getElementById('contentTaEdit'),
+                    'post-cat-news': document.getElementById('newsCbEdit'),
+                    'post-cat-music': document.getElementById('musicCbEdit'),
+                    'post-cat-events': document.getElementById('eventsCbEdit')
+                }
+                formElements['post-title'].value = p['title']['rendered'];
+            }));
+        });
+
+        globalElements['delete-post'].addEventListener('click', async() => {
+            hideInitLinks();
+            globalElements['delete-post-view'].style.display = 'flex';
+
+            const tableBody = document.getElementById('deletePostBody');
+            tableBody.innerHTML = '';
+
+            const posts = await getFromApi('posts');
+            posts.forEach(async(p) => await drawTable(p, tableBody, 'Delete Post', function() {alert('hello world')}));
+        });
+    }
+
+    async function uploadPost() {
+
+    }
+
+    async function uploadImage(image, title, caption, alt) {
+        if(!image) {
+            console.log("Error here");
+            return;
+        }
+
+        const apiUrl = 'https://capcityhiphop.com/wp-json/wp/v2/media/';
+        const formData = new FormData();
+        formData.append('file', image, image.name);
+        formData.append('title', title);
+        formData.append('caption', caption);
+        formData.append('alt_text', alt);
+        formData.append('description', alt);
+        console.log(formData);
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Basic ${getCredentials()}`
+                },
+                
+                body: formData
+            });
+
+            if(response.ok) {
+                const jsonResponse = await response.json();
+                return jsonResponse;
+            }
+            else {
+                console.error("Status: " + response.status);
+                console.error("Status Text: " + response.statusText);
+            }
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
+    async function drawTable(post, tbody, buttonText, buttonFunc) {
+        const tRow = document.createElement('tr');
+        
+
+        const tCells = [
+            document.createElement('td'),
+            document.createElement('td'),
+            document.createElement('td'),
+            document.createElement('td'),
+            document.createElement('td'),
+            document.createElement('td')
+        ]
+        
+        tCells[0].innerHTML = post['id'];
+        tCells[1].innerHTML = post['title']['rendered'];
+        tCells[2].innerHTML = await getAuthor(post['author']);
+        tCells[3].innerHTML = await getPostCategories(post);
+        tCells[4].innerHTML = post['date'].split('T')[0]
+
+        const btn = document.createElement('button');
+        btn.innerHTML = buttonText;
+        btn.classList.add('fake-btn');
+
+        tCells[5].appendChild(btn);
+        btn.addEventListener('click', () => buttonFunc());
+        tCells.forEach((c) => tRow.appendChild(c));
+        tbody.appendChild(tRow);
+            
+    }
+    //#region ApiFunctionality
+
+    async function getPostCategoryKey(categoryName) {
+        const categories = await getFromApi('categories');
+        const formattedCategory = categoryName.charAt(0).toUpperCase() + categoryName.slice(1);
+        const category = categories.find(c => c['name'] === formattedCategory);
+        const categoryId = (category && category['id']) ? category['id'] : 'category-not-found';
+        return categoryId;
+    }
+    //Formulates a string of categories related to the post
+    async function getPostCategories(post) {
+        //Get all categories
+        const categories = await getFromApi('categories');
+        let postCategories = ""; //Return value
+        
+        categories.forEach((c) => {
+            //If provided post's category id's include retrieved category's id then...
+            if(post['categories'].includes(c['id'])) {
+                postCategories += (c['name'] + "\n");
+            }
+        });
+        return postCategories;
+    }
+
+    async function getAuthors() {
+        const authors = await getFromApi('users');
+        return authors;
+    }
+    async function getAuthor(authorId) {
+        //Get all users
+        const authors = await getFromApi('users');
+        let author = null;
+
+        authors.forEach((a) => {
+            //If retrieved author id is equal to provided authorId
+            if(a['id'] == authorId) {
+                //Get author name
+                author = a['name'];
+            }
+        });
+        return author;
+
+    }
+
+    async function findImage(uri) {
+        const images = await getFromApi('media');
+        
+        const image = images.find(i => i['guid']['rendered'] == uri);
+        if(image) return image;
+        else {
+            console.error('could not find image');
+            return;
+        }
+    }
+    //GET requests only
+    async function getFromApi(endpoint) {
+        try {
+            const response = await fetch(`https://capcityhiphop.com/wp-json/wp/v2/${endpoint}`);
+            const results = await response.json();
+            return results;
+        } catch (e) {
+            console.log(e);
+            return null;
+        }
+    }
+
+    //#endregion
+
+    //#region Util
+    //Generates placeholder content for the content TextArea of the Add Post Form
+    function contentPlaceholderGenerate() {
+        let placeholder = "For italic text, wrap it one pair of []. Example: [This text will be italic].\n" +
+            "For bold text, wrap it in two pairs. Example: [[This text will be bold]].\n" +
+            "Underlined text goes inside three pairs. Example [[[This text will be underlined]]].\n" +
+            "For additional images, place the URL inside four pairs. Example: [[[[http://capcityhiphop.com/link-to-image]]]].\n" +
+            "You can add images by logging into WordPress and going to Add Media, \nthis will give you a URL you can use here, or go back to the links to add media and keep note of the URL it generates";
+
+        document.getElementById('contentTa').placeholder = placeholder;
+    }
+
+    //Hides links from the DOM when clicked
+    function hideInitLinks() { globalElements['init-links'].style.display = 'none'; }
+    function extractYoutubeLink(youtubeUrl) {
+        let regex = /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/;
+        let match = youtubeUrl.match(regex);
+        let extractedUrl = (match) ? match[1] : null;
+
+        return (extractedUrl) ?
+            `<iframe width="560" height="315" src="https://www.youtube.com/embed/${extractedUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`
+            : 'invalid';
+
+    }
+
+    async function getTagIds(tagsList) {
+        const tags = await getFromApi('tags');
+        const returnTagIds = [];
+
+        for (const tag of tagsList) {
+            const tagFound = tags.find(t => t.name.toLowerCase() === tag.toLowerCase());
+
+            if (tagFound) {
+                returnTagIds.push(tagFound.id);
+            } else {
+                // Tag not found, create it
+                const newTag = await createTag(tag);
+                returnTagIds.push(newTag['id']);
+            }
+        }
+
+        return returnTagIds;
+    }
+
+    async function createTag(tag) {
+        const url = 'https://capcityhiphop.com/wp-json/wp/v2/tags/';
+        const formData = new FormData();
+        formData.append('name', tag);
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Basic ${getCredentials()}`
+                },
+                body: formData
+            });
+
+            if(response.ok) {
+                const jsonResponse = await response.json();
+                console.log(jsonResponse['id'] + jsonResponse['name'])
+                return jsonResponse;
+            }
+            else {
+                console.error("Status: " + response.status);
+                console.error("Status Text: " + response.statusText);
+            }
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function parseAndRenderContent(text) {
+        const imageRegex = /\[\[\[\[(.*?)\]\]\]\]/g;
+        const imageMatches = text.matchAll(imageRegex);
+
+        for (const match of imageMatches) {
+            const notation = match[0];
+            const url = match[1];
+            const img = await findImage(url);
+
+            if (img) {
+                const altText = img['alt_text'];
+                text = text.replace(notation, `<img src="${url}" alt="${altText}">`);
+            }
+        }
+
+        text = text.replace(/\[\[\[(.*?)\]\]\]/g, '<u>$1</u>');
+        text = text.replace(/\[\[(.*?)\]\]/g, '<strong>$1</strong>');
+        text = text.replace(/\[(.*?)\]/g, '<em>$1</em>');
+
+        
+
+        return text;
+    }
+
+    function getCredentials() {
+        return "somefakecredentials";
+    }
+
+
+    //#endregion
+    
+</script>
